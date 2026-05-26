@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Formulário</title>
+  </head>
+  <body>
+    <form id="form-cadastro" action="#">
+      <label for="nome">Nome</label>
+      <input type="text" name="nome" id="nome" />
+      <label for="cep">CEP</label>
+      <input type="text" name="cep" id="cep" maxlength="9" title="Apenas números" required />
+      <label for="logradouro">Endereço</label>
+      <input type="text" name="logradouro" id="logradouro" />
+      <label for="complemento">Complemento</label>
+      <input type="text" name="complemento" id="complemento" />
+      <label for="bairro">Bairro</label>
+      <input type="text" name="bairro" id="bairro" />
+      <label for="localidade">Cidade</label>
+      <input type="text" name="localidade" id="localidade" />
+      <label for="estado">Estado</label>
+      <input type="text" name="estado" id="estado" />
+      <button type="submit" id="btn-submit">Enviar</button>
+      <p id="error" style="display: none;">Erro ao carregar ou CEP inválido</p>
+      <p id="loading" style="display: none;">Carregando CEP...</p>
+    </form>
+    <script src="../assets/scripts/form.js"></script>
+  </body>
+</html>
