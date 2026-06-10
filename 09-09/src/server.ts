@@ -20,7 +20,7 @@ app.get("/meunome", (req: Request, res: Response): void => {
   res.status(200).send("Meu nome é Eduarda");
 });
 /* SELECT: listar usuários */
-app.get("/usuarios", async (req: Request, res: Response) => {
+app.get("/usuarios", async (req: Request, res: Response): Promise<Response> => {
   // tenta fazer a consulta no banco
   try {
     // query("consultaSQL") é um método da biblioteca do mysql2 que executa comandos SQL. Neste caso, estamos fazendo um SELECT * armazenando as informações na variável usuários
@@ -34,27 +34,30 @@ app.get("/usuarios", async (req: Request, res: Response) => {
   }
 });
 /* INSERT: inserir usuários */
-app.post("/usuarios", async (req: Request, res: Response) => {
-  try {
-    const { nome, email, senha } = req.body; // essas informações vem do corpo da requisição
-    const [resultado] = await pool.query(
-      "INSERT INTO usuarios (nome, email, senha) VALUES (?, ?, ?);",
-      { nome, email, senha }
-    );
-    // staus 201: dado criado com sucesso
-    return res.status(201).json("Usuário criado com sucesso");
-  } catch (error) {
-    return res.status(500).json("Erro ao criar usuário: " + error);
+app.post(
+  "/usuarios",
+  async (req: Request, res: Response): Promise<Response> => {
+    try {
+      const { nome, email, senha } = req.body; // essas informações vem do corpo da requisição
+      const [resultado] = await pool.query(
+        "INSERT INTO usuarios (nome, email, senha) VALUES (?, ?, ?);",
+        [nome, email, senha]
+      );
+      // staus 201: dado criado com sucesso
+      return res.status(201).json("Usuário criado com sucesso");
+    } catch (error) {
+      return res.status(500).json("Erro ao criar usuário: " + error);
+    }
   }
-});
+);
 /* UPDATE: atualizar usuários */
-app.put("/usuarios/:id", async (req: Request, res: Response) => {
+app.put("/usuarios/:id", async (req: Request, res: Response): Promise<Response> => {
   try {
     const { id } = req.params;
     const { nome, email, senha } = req.body; // essas informações vem do corpo da requisição
     const [resultado] = await pool.query(
       "UPDATE usuarios SET nome = ?, email = ?, senha = ? WHERE id = ?;",
-      { nome, email, senha, id }
+      [nome, email, senha, id]
     );
     return res.status(200).json("Usuário atualizado com sucesso");
   } catch (error) {
