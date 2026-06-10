@@ -1,4 +1,5 @@
-// importa a pasta express
+// criando servidor sem tipagem explícita
+/* importa a pasta express */
 import express from "express";
 /* cria o objeto express, através dele teremos acesso a métodos que nos permitem criar o nosso servidor */
 const app = express();
