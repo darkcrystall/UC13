@@ -19,20 +19,6 @@ app.get("/mensagem", (req: Request, res: Response): void => {
 app.get("/meunome", (req: Request, res: Response): void => {
   res.status(200).send("Meu nome é Eduarda");
 });
-/* SELECT: listar usuários */
-app.get("/usuarios", async (req: Request, res: Response): Promise<Response> => {
-  // tenta fazer a consulta no banco
-  try {
-    // query("consultaSQL") é um método da biblioteca do mysql2 que executa comandos SQL. Neste caso, estamos fazendo um SELECT * armazenando as informações na variável usuários
-    const [usuarios] = await pool.query("SELECT * FROM usuarios;");
-    // retorna o resultado com status 200 (ok) no formato JSON
-    return res.status(200).json(usuarios);
-  } catch (error) {
-    // se der errado, mostra o erro
-    // status 500 siginifca erro de servidor
-    return res.status(500).json("Erro ao buscar usuários: " + error);
-  }
-});
 /* INSERT: inserir usuários */
 app.post(
   "/usuarios",
@@ -50,20 +36,53 @@ app.post(
     }
   }
 );
-/* UPDATE: atualizar usuários */
-app.put("/usuarios/:id", async (req: Request, res: Response): Promise<Response> => {
+/* SELECT: listar usuários */
+app.get("/usuarios", async (req: Request, res: Response): Promise<Response> => {
+  // tenta fazer a consulta no banco
   try {
-    const { id } = req.params;
-    const { nome, email, senha } = req.body; // essas informações vem do corpo da requisição
-    const [resultado] = await pool.query(
-      "UPDATE usuarios SET nome = ?, email = ?, senha = ? WHERE id = ?;",
-      [nome, email, senha, id]
-    );
-    return res.status(200).json("Usuário atualizado com sucesso");
+    // query("consultaSQL") é um método da biblioteca do mysql2 que executa comandos SQL. Neste caso, estamos fazendo um SELECT * armazenando as informações na variável usuários
+    const [usuarios] = await pool.query("SELECT * FROM usuarios;");
+    // retorna o resultado com status 200 (ok) no formato JSON
+    return res.status(200).json(usuarios);
   } catch (error) {
-    return res.status(500).json("Erro ao atualizar usuário: " + error);
+    // se der errado, mostra o erro
+    // status 500 siginifca erro de servidor
+    return res.status(500).json("Erro ao buscar usuários: " + error);
   }
 });
+/* UPDATE: atualizar usuários */
+app.put(
+  "/usuarios/:id",
+  async (req: Request, res: Response): Promise<Response> => {
+    try {
+      const { id } = req.params;
+      const { nome, email, senha } = req.body; // essas informações vem do corpo da requisição
+      const [resultado] = await pool.query(
+        "UPDATE usuarios SET nome = ?, email = ?, senha = ? WHERE id = ?;",
+        [nome, email, senha, id]
+      );
+      return res.status(200).json("Usuário atualizado com sucesso");
+    } catch (error) {
+      return res.status(500).json("Erro ao atualizar usuário: " + error);
+    }
+  }
+);
+/* DELETE: remover usuários */
+app.delete(
+  "/usuarios/:id",
+  async (req: Request, res: Response): Promise<Response> => {
+    try {
+      const { id } = req.params;
+      const [resultado] = await pool.query(
+        "DELETE FROM usuarios WHERE id = ?;",
+        [id]
+      );
+      return res.status(200).json("Usuário deletado com sucesso");
+    } catch (error) {
+      return res.status(500).json("Erro ao deletar usuário: " + error);
+    }
+  }
+);
 /* listen() é o método dp express para colocar nosso servidor no ar. Ele precisa que passamos dois argumentos */
 /* O primeiro é a porta, e o segundo é uma função que vai ser executada quando o servidor estiver no ar */
 app.listen(PORT, (): void => {
