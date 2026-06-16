@@ -7,7 +7,7 @@ app.use(express.json());
 app.post("/livros", async (req: Request, res: Response): Promise<Response> => {
   try {
     const { titulo, autor, ano_lancamento } = req.body;
-    const [resultado] = await pool.query(
+    await pool.query(
       "INSERT INTO livros (titulo, autor, ano_lancamento) VALUES (?, ?, ?);",
       [titulo, autor, ano_lancamento]
     );
@@ -32,7 +32,7 @@ app.put(
     try {
       const { id } = req.params;
       const { titulo, autor, ano_lancamento } = req.body;
-      const [resultado] = await pool.query(
+      await pool.query(
         "UPDATE livros SET titulo = ?, autor = ?, ano_lancamento = ? WHERE id = ?;",
         [titulo, autor, ano_lancamento, id]
       );
@@ -48,7 +48,7 @@ app.delete(
   async (req: Request, res: Response): Promise<Response> => {
     try {
       const { id } = req.params;
-      const [resultado] = await pool.query(
+      await pool.query(
         "DELETE FROM livros WHERE id = ?;",
         [id]
       );
