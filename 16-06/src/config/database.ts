@@ -1,7 +1,7 @@
-import mysql from "mysql2/promise";
-export const db = mysql.createPool({
+import mysql, { Pool } from "mysql2/promise";
+export const db: Pool = mysql.createPool({
   host: "localhost",
   user: "root",
   password: "root",
-  database: "sistema",
+  database: "users_db",
 });
