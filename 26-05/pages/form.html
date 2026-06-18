@@ -4,27 +4,66 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Formulário</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../assets/styles/main.css" />
   </head>
   <body>
-    <form id="form-cadastro" action="#">
-      <label for="nome">Nome</label>
-      <input type="text" name="nome" id="nome" />
-      <label for="cep">CEP</label>
-      <input type="text" name="cep" id="cep" maxlength="9" title="Apenas números" required />
-      <label for="logradouro">Endereço</label>
-      <input type="text" name="logradouro" id="logradouro" />
-      <label for="complemento">Complemento</label>
-      <input type="text" name="complemento" id="complemento" />
-      <label for="bairro">Bairro</label>
-      <input type="text" name="bairro" id="bairro" />
-      <label for="localidade">Cidade</label>
-      <input type="text" name="localidade" id="localidade" />
-      <label for="estado">Estado</label>
-      <input type="text" name="estado" id="estado" />
-      <button type="submit" id="btn-submit">Enviar</button>
-      <p id="error" style="display: none;">Erro ao carregar ou CEP inválido</p>
-      <p id="loading" style="display: none;">Carregando CEP...</p>
-    </form>
+    <main class="page">
+      <nav class="top-nav">
+        <a href="../index.html" class="top-nav__link">piadas</a>
+        <a href="./form.html" class="top-nav__link is-active">cadastro</a>
+      </nav>
+
+      <section class="console-card">
+        <p class="request-line"><span class="method">GET</span><span class="path">/ws/{cep}/json</span></p>
+
+        <h1>Cadastro de Endereço</h1>
+        <p class="description">Preencha o CEP e o resto do endereço chega sozinho via ViaCEP.</p>
+
+        <form id="form-cadastro" action="#">
+
+          <div class="field">
+            <label for="cep">CEP</label>
+            <input type="text" name="cep" id="cep" maxlength="9" title="Apenas números" required inputmode="numeric" />
+            <p id="loading" class="status-msg is-loading is-hidden">Carregando CEP...</p>
+            <p id="error" class="status-msg is-error is-hidden">Erro ao carregar ou CEP inválido</p>
+          </div>
+
+          <div class="field">
+            <label for="logradouro">Endereço</label>
+            <input type="text" name="logradouro" id="logradouro" />
+          </div>
+
+          <div class="field">
+            <label for="complemento">Complemento</label>
+            <input type="text" name="complemento" id="complemento" />
+          </div>
+
+          <div class="field-grid">
+            <div class="field">
+              <label for="bairro">Bairro</label>
+              <input type="text" name="bairro" id="bairro" />
+            </div>
+            <div class="field">
+              <label for="localidade">Cidade</label>
+              <input type="text" name="localidade" id="localidade" />
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="estado">Estado</label>
+            <input type="text" name="estado" id="estado" />
+          </div>
+
+          <button type="submit" id="btn-submit" class="btn-primary">Enviar</button>
+        </form>
+      </section>
+    </main>
     <script src="../assets/scripts/form.js"></script>
   </body>
 </html>

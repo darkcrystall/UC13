@@ -6,24 +6,32 @@ const localidade = document.getElementById("localidade");
 const estado = document.getElementById("estado");
 
 const error = document.getElementById("error");
+const loading = document.getElementById("loading");
 
 cep.addEventListener("change", async (event) => {
     const campoCep = event.target.value;
-        try {
-            const cepLimpo = campoCep.replace("-", "");
-            cep.value = cepLimpo;
+    const cepLimpo = campoCep.replace("-", "");
+    cep.value = cepLimpo;
 
-            const srcApi = `https://viacep.com.br/ws/${cepLimpo}/json/`;
-            const response = await fetch(srcApi);
-            const data = await response.json();
+    error.classList.add("is-hidden");
+    loading.classList.remove("is-hidden");
 
-            logradouro.value = data.logradouro;
-            complemento.value = data.complemento;
-            bairro.value = data.bairro;
-            localidade.value = data.localidade;
-            estado.value = data.estado;
+    try {
+        const srcApi = `https://viacep.com.br/ws/${cepLimpo}/json/`;
+        const response = await fetch(srcApi);
+        const data = await response.json();
 
-        } catch (error) {
-            console.log("Erro: " + error)
-        }
+        if (data.erro) throw new Error("CEP não encontrado");
+
+        logradouro.value = data.logradouro ?? "";
+        complemento.value = data.complemento ?? "";
+        bairro.value = data.bairro ?? "";
+        localidade.value = data.localidade ?? "";
+        estado.value = data.estado ?? "";
+    } catch (err) {
+        error.classList.remove("is-hidden");
+        console.log("Erro: " + err);
+    } finally {
+        loading.classList.add("is-hidden");
+    }
 });

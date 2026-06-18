@@ -4,12 +4,41 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Consumindo APIs</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./assets/styles/main.css" />
   </head>
   <body>
-    <h1>Gerador de Piadas</h1>
-    <button id="gerar-piada">Gerar Piada</button>
-    <p id="piada-chuck"></p>
-    <p id="piada-geral"></p>
+    <main class="page">
+      <nav class="top-nav">
+        <a href="./index.html" class="top-nav__link is-active">piadas</a>
+        <a href="./pages/form.html" class="top-nav__link">cadastro</a>
+      </nav>
+
+      <section class="console-card">
+        <p class="request-line"><span class="method">GET</span><span class="path">/jokes/random</span></p>
+
+        <h1>Gerador de Piadas</h1>
+        <p class="description">Um clique, duas respostas: uma da Chuck Norris API, outra da JokeAPI.</p>
+
+        <button id="gerar-piada" class="btn-primary">Gerar Piada</button>
+        <p id="erro-piada" class="status-msg is-error is-hidden">Não foi possível buscar as piadas agora</p>
+
+        <div class="response-card">
+          <span class="response-label">Chuck Norris API</span>
+          <p id="piada-chuck" aria-live="polite"></p>
+        </div>
+
+        <div class="response-card">
+          <span class="response-label">JokeAPI</span>
+          <p id="piada-geral" aria-live="polite"></p>
+        </div>
+      </section>
+    </main>
     <script src="./assets/scripts/index.js"></script>
   </body>
 </html>
