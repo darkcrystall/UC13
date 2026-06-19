@@ -1,3 +1,4 @@
+// models: representa os dados inseridos no banco de dados. para cada tabela, teremos uma classe
 export class User {
   private id?: number;
   private email: string;

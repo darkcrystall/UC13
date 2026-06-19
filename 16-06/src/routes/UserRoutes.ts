@@ -15,11 +15,11 @@ router.post("/users", (req, res): void => {
   controller.createUser(req, res);
 });
 // PUT route
-router.put("/users", (req, res): void => {
+router.put("/users/:id", (req, res): void => {
   controller.updateUser(req, res);
 });
 // DELETE route
-router.delete("/users", (req, res): void => {
+router.delete("/users/:id", (req, res): void => {
   controller.deleteUser(req, res);
 });
 export default router;
