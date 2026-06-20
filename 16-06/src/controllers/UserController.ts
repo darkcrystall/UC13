@@ -43,13 +43,24 @@ export class UserController {
   async updateUser(req: Request, res: Response): Promise<Response> {
     try {
       const id: number = Number(req.params.id);
+
+      if (!id) {
+        return res.status(400).json({ message: "ID is required to update." });
+      }
+
+      if (!req.body || Object.keys(req.body).length === 0) {
+      return res.status(400).json({ message: "Request body is empty." });
+       }
+
       const { email, password } = req.body;
+
       if (!id || !email || !password) {
         return res.status(400).json({ message: "All fields are required." });
       }
+
       const result = await this.service.update(id, email, password);
       if (!result) {
-        return res.status(404).json({ message: "Cannot update this user." });
+        return res.status(404).json({ message: "Cannot update this user: user does not exist." });
       }
       return res.status(200).json({ message: "Sucess: user updated." });
     } catch (error) {
@@ -66,6 +77,7 @@ export class UserController {
       if (!result) {
         return res.status(404).json({ message: "Cannot delete this user." });
       }
+      // 204: NO CONTENT (sucesso, mas resposta sem corpo)
       return res.status(204).send({ message: "Sucess: user deleted."});
     } catch (error) {
       return res.status(500).json({ message: "Error: " + error });

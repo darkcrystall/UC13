@@ -1,4 +1,4 @@
-import { QueryResult } from "mysql2";
+import { FieldPacket, QueryResult, ResultSetHeader } from "mysql2";
 import { db } from "../config/database";
 import { User } from "../models/User";
 export class UserService {
@@ -37,7 +37,7 @@ export class UserService {
     email: string,
     password: string
   ): Promise<boolean> {
-    const [result]: any = await db.query(
+    const [result]: [ResultSetHeader, FieldPacket[]] = await db.query<ResultSetHeader>(
       "UPDATE users SET email = ?, password = ? WHERE id = ?;",
       [email, password, id]
     );
@@ -45,7 +45,7 @@ export class UserService {
   }
   // DELETE
   async delete(id: number): Promise<boolean> {
-    const [result]: any = await db.query("DELETE FROM users WHERE id = ?;", [id]);
+    const [result]: [ResultSetHeader, FieldPacket[]] = await db.query<ResultSetHeader>("DELETE FROM users WHERE id = ?;", [id]);
     return result.affectedRows > 0;
   }
 }
