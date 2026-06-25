@@ -1,42 +1,88 @@
-import { QueryResult } from "mysql2";
+import { ResultSetHeader, RowDataPacket } from "mysql2";
 import { pool } from "../config/connection";
 import { User } from "../models/User";
+
+interface IUserRow extends RowDataPacket {
+  id: number;
+  nome: string;
+  email: string;
+  senha: string;
+}
 export class UserRepository {
-  async create(
-    nome: string,
-    email: string,
-    senha: string
-  ): Promise<QueryResult> {
-    const user = new User(nome, email, senha);
-    const [result] = await pool.query(
+  async findAll(): Promise<User[] | null> {
+    const [rows] = await pool.query<IUserRow[]>("SELECT * FROM users;");
+    if (rows.length === 0) {
+      return null;
+    }
+    return rows.map(
+      (user) => new User(user.nome, user.email, user.senha, user.id)
+    );
+  }
+  async findById(id: number): Promise<User | null> {
+    const [result] = await pool.query<IUserRow[]>(
+      "SELECT * FROM users WHERE id = ?",
+      [id]
+    );
+    if (result[0].length === 0) {
+      return null;
+    }
+    return new User(
+      result[0].nome,
+      result[0].email,
+      result[0].senha,
+      result[0].id
+    );
+  }
+  async findByEmail(email: string): Promise<User | null> {
+    const [result] = await pool.query<IUserRow[]>(
+      "SELECT * FROM users WHERE email = ?",
+      [email]
+    );
+    if (result[0].length === 0) {
+      return null;
+    }
+    return new User(
+      result[0].nome,
+      result[0].email,
+      result[0].senha,
+      result[0].id
+    );
+  }
+  async create(user: User): Promise<User | null> {
+    const [result] = await pool.query<ResultSetHeader>(
       "INSERT INTO users (nome, email, senha) VALUES (?, ?, ?);",
       [user.getNome(), user.getEmail(), user.getSenha()]
     );
-    return result;
+    if (result.affectedRows === 0) {
+      return null;
+    }
+    return new User(
+      user.getNome(),
+      user.getEmail(),
+      user.getSenha(),
+      result.insertId
+    );
   }
-  async findAll(): Promise<QueryResult> {
-    const [rows] = await pool.query("SELECT * FROM users;");
-    return rows;
-  }
-  async findById(id: number): Promise<QueryResult> {
-    const result = await pool.query("SELECT * FROM users WHERE id = ?;", [id]);
-    return result[0];
-  }
-  async update(
-    id: number,
-    nome: string,
-    email: string,
-    senha: string
-  ): Promise<QueryResult> {
-    const user = new User(nome, email, senha, id);
-    const [result] = await pool.query(
+  async update(user: User): Promise<User | null> {
+    const [result] = await pool.query<ResultSetHeader>(
       "UPDATE users SET nome = ?, email = ?, senha = ? WHERE id = ?;",
       [user.getNome(), user.getEmail(), user.getSenha(), user.getId()]
     );
-    return result;
+    if (result.affectedRows === 0) {
+      return null;
+    }
+    return new User(
+      user.getNome(),
+      user.getEmail(),
+      user.getSenha(),
+      user.getId()
+    );
   }
-  async delete(id: number): Promise<QueryResult> {
-    const [result] = await pool.query("DELETE FROM users WHERE id = ?;", [id]);
-    return result;
+  async delete(id: number): Promise<Boolean> {
+    const [result] = await pool.query<ResultSetHeader>(
+      "DELETE FROM users WHERE id = ?;",
+      [id]
+    );
+    return result.affectedRows > 0;
   }
 }
