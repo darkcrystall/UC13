@@ -23,14 +23,15 @@ export class UserRepository {
       "SELECT * FROM users WHERE id = ?",
       [id]
     );
-    if (result[0].length === 0) {
+    if (result.length === 0) {
       return null;
     }
+    const user = result[0];
     return new User(
-      result[0].nome,
-      result[0].email,
-      result[0].senha,
-      result[0].id
+      user.nome,
+      user.email,
+      user.senha,
+      user.id
     );
   }
   async findByEmail(email: string): Promise<User | null> {
@@ -38,14 +39,15 @@ export class UserRepository {
       "SELECT * FROM users WHERE email = ?",
       [email]
     );
-    if (result[0].length === 0) {
+    if (result.length === 0) {
       return null;
     }
+    const user = result[0];
     return new User(
-      result[0].nome,
-      result[0].email,
-      result[0].senha,
-      result[0].id
+      user.nome,
+      user.email,
+      user.senha,
+      user.id
     );
   }
   async create(user: User): Promise<User | null> {

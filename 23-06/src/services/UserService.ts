@@ -1,41 +1,32 @@
-import { QueryResult } from "mysql2";
 import { UserRepository } from "../repositories/UserRepository";
 import { AppError } from "../errors/error-handler";
 import { User } from "../models/User";
 export class UserService {
-  private repo = new UserRepository();
+  private readonly repo = new UserRepository();
   async registerUser(
     nome: string,
     email: string,
     senha: string
   ): Promise<User | null> {
-    try {
-      const userAlreadyExists = this.repo.findByEmail(email);
-      if (userAlreadyExists != null) {
-        throw new AppError("E-mail já cadastrado", 409); // 409: CONFLICT
-      }
-      const user: User = new User(nome, email, senha);
-      const newUser = await this.repo.create(user);
-      if (newUser == null) {
-        throw new AppError("Erro ao cadastrar usuário", 500);
-      }
-      return newUser;
-    } catch {
-      throw new AppError("Algo deu errado", 500);
+    if (!nome || !email || !senha) {
+      throw new AppError("Todos os campos são obrigatórios", 400);
     }
+    const userAlreadyExists = await this.repo.findByEmail(email);
+    if (userAlreadyExists) {
+      throw new AppError("Usuário já existe", 409);
+    }
+    const user = new User(nome, email, senha);
+    return await this.repo.create(user);
   }
   async getAllUsers(): Promise<User[] | null> {
     try {
       const users = await this.repo.findAll();
-      if (users && users == null) {
-        throw new AppError("Nenhum usuário cadastrado", 404);
-      }
       return users;
     } catch {
       throw new AppError("Erro ao buscar dados", 500);
     }
   }
-  async getUserById(id: number): Promise<User| null> {
+  async getUserById(id: number): Promise<User | null> {
     try {
       const user = await this.repo.findById(id);
       if (user && user == null) {
