@@ -19,23 +19,15 @@ export class UserService {
     return await this.repo.create(user);
   }
   async getAllUsers(): Promise<User[] | null> {
-    try {
-      const users = await this.repo.findAll();
-      return users;
-    } catch {
-      throw new AppError("Erro ao buscar dados", 500);
-    }
+    const users = await this.repo.findAll();
+    return users;
   }
   async getUserById(id: number): Promise<User | null> {
-    try {
-      const user = await this.repo.findById(id);
-      if (user && user == null) {
-        throw new AppError("Nenhum usuário encontrado", 404);
-      }
-      return user;
-    } catch {
-      throw new AppError("Erro ao encontrar o usuário", 500);
+    const user = await this.repo.findById(id);
+    if (user && user == null) {
+      throw new AppError("Nenhum usuário encontrado", 404);
     }
+    return user;
   }
   // async updateUser(
   //   id: number,
