@@ -9,7 +9,7 @@ import { User } from '../models/User';
 import { Post } from '../models/Post';
 // carrega as variáveis de ambiente do arquivo .env para o process.env
 dotenv.config();
-// pegamos as variáveis de ambiente definidas no .env através de destructuring.
+// pegamos as variáveis de ambiente definidas no .env através de destructuring (desestruturação).
 const { DB_HOST, DB_PORT, DB_USER, DB_PWD, DB_NAME } = process.env;
 // Criamos e exportamos a configuração principal do banco de dados. Quando você cria uma instância de DataSource, você define:
 //   - Tipo do banco (mysql, postgres, etc.)
