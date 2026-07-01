@@ -18,7 +18,7 @@ export class Jogador {
   altura: number;
   @Column({ type: "decimal", nullable: false })
   peso: number;
-  @Column({ type: "int", nullable: false })
+  @Column({ type: "int", nullable: false, default: 0 })
   gols: number;
   @ManyToOne(() => Selecao, (selecao) => selecao.jogadores)
   selecao: Selecao;

@@ -15,6 +15,6 @@ export class Selecao {
   rankingFifa: number;
   @Column({ type: "year", nullable: false })
   anoFundacao: number;
-  @OneToMany(() => Jogador, (selecao) => selecao.selecao)
+  @OneToMany(() => Jogador, (jogador) => jogador.selecao)
   jogadores: Jogador[];
 }

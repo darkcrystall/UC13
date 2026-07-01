@@ -3,6 +3,7 @@ import * as dotenv from "dotenv";
 import { AppDataSource } from "./config/data-source";
 const app: Application = express();
 dotenv.config();
+app.use(express.json());
 const PORT = process.env.PORT;
 AppDataSource.initialize()
   .then(() => {
