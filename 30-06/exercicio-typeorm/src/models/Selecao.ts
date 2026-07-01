@@ -7,6 +7,8 @@ export class Selecao {
   id: number;
   @Column({ type: "varchar", nullable: false, unique: true })
   pais: string;
+  @Column({ type: "varchar", nullable: false, unique: true })
+  nome: string;
   @Column({ type: "varchar", unique: true, nullable: false })
   tecnico: string;
   @Column({ type: "int", unique: true, nullable: false })
