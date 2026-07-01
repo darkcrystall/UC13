@@ -1,7 +1,6 @@
 import express, { Application } from "express";
 import * as dotenv from "dotenv";
 import { AppDataSource } from "./config/data-source";
-import { error } from "console";
 const app: Application = express();
 dotenv.config();
 const PORT = process.env.PORT;
