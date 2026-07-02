@@ -13,10 +13,11 @@ export const UserRepository = {
     // o método find() vem do TypeORM. Ele procura algo em uma tabela, aceita como parâmetro um objeto com opções para essa busca. Nesse caso, estamos buscando também os posts relacionados a um usuário, ou seja, quando buscarmos um usuário qualquer, o servidor também vai retornar no JSON todos os posts que pertencem a ele. Aqui, retorna todos os usuários com todos os seus posts
     return repo.find({ relations: ["posts"] });
   },
+  // busca um único usuário pelo id, também trazendo os posts relacionados a ele
   async findById(id: number) {
     return repo.findOne({ where: { id }, relations: ["posts"] });
   },
-  async create(data: User) {
+  async create(data: {name: string, email: string, password: string}) {
     // cria o usuário
     const user = repo.create(data);
     // salva o usuário o banco

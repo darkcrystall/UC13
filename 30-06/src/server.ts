@@ -1,10 +1,13 @@
 import express, { Application } from "express";
 import * as dotenv from "dotenv";
 import { AppDataSource } from "./config/data-source";
+import { router } from "./routes";
+import { errorHandler } from "./middlewares/errorHandler";
 const app: Application = express();
 dotenv.config();
 const PORT = process.env.PORT; // pega o valor da variável PORT do .env
 app.use(express.json());
+app.use(router);
 // .initialize() é um método do TypeORM que abre a conexão com o banco
 // usando as configurações definidas em data-source.ts, carrega as
 // entidades e executa a sincronização (criação das tabelas, já que
@@ -14,6 +17,7 @@ app.use(express.json());
 AppDataSource.initialize()
   .then(() => {
     console.log("Banco conectado com sucesso");
+    app.use(errorHandler);
     app.listen(PORT, () => {
       console.log(`Servidor rodando na porta ${PORT}`);
     });
