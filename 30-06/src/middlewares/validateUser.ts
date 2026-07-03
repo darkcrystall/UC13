@@ -11,10 +11,10 @@ export function validateUser(req: Request, res: Response, next: NextFunction) {
       .json({ message: "Todos os campos são obrigatórios" });
   }
   // senha não pode ter menos de 6 caracteres
-  if (password.lenght < 6) {
+  if (password.length < 6) {
     return res
       .status(400)
-      .json({ message: "A senha deve ter pelo meos 6 caracteres" });
+      .json({ message: "A senha deve ter pelo menos 6 caracteres" });
   }
   // se passou todas verificações, então deixamos a requisição seguir adiante e passar para a camada controller
   next();

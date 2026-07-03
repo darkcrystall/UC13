@@ -32,7 +32,40 @@ export const UserService = {
       email: data.email,
       password: hashedPassword,
     });
-    // chamamos o método de repository para salvar esse user no banco
+    // chamamos o método de omitPassword, que retorna sem mostrar a senha
     return omitPassword(user);
+  },
+  // atualiza um usuário existente
+  async update(
+    id: number,
+    data: { name?: string; email?: string; password?: string }
+  ) {
+    // reaproveitamos o getById, pos já busca o usuário e já lança NotFoundError se não existir
+    const user = await UserRepository.findById(id);
+    if (!user) {
+      throw new NotFoundError("Usuário não encontrado");
+    }
+    // é necessário alterar/atualizar apenas os campos que vieram, assim podemos atualizar apenas um campo
+    if (data.name) {
+      user.name = data.name;
+    }
+    if (data.email) {
+      user.email = data.email;
+    }
+    // caso vier uma nova senha, é necessário criptografá-la novamente. do contrário, mantemos a antiga
+    if (data.password) {
+      user.password = await bcrypt.hash(data.password, 10);
+    }
+    // depois, chamamos o método create do repository (ele salva no banco)
+    const updatedUser = await UserRepository.create(user);
+    // retorna o usuário com a senha oculta
+    return omitPassword(updatedUser);
+  },
+  // deleta um usuário
+  async delete(id: number) {
+    const result = await UserRepository.delete(id);
+    if (result.affected === 0) {
+      throw new Error("Usuário não encontrado");
+    }
   },
 };

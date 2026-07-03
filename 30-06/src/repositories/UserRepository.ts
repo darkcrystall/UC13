@@ -17,10 +17,17 @@ export const UserRepository = {
   async findById(id: number) {
     return repo.findOne({ where: { id }, relations: ["posts"] });
   },
-  async create(data: {name: string, email: string, password: string}) {
+  async create(data: { name: string; email: string; password: string }) {
     // cria o usuário
     const user = repo.create(data);
     // salva o usuário o banco
     return repo.save(user);
+  },
+  // deleta um usuário
+  // delete retorna um objeto com informação sobre quantas linhas foram
+  // afetadas (result.affected), que o Service usa pra saber se realmente
+  // existia um usuário com esse id
+  async delete(id: number) {
+    return repo.delete(id);
   },
 };
