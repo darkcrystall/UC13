@@ -16,7 +16,8 @@
     "express": "^5.2.1",
     "mysql2": "^3.22.5",
     "reflect-metadata": "^0.2.2",
-    "typeorm": "^0.3.30"
+    "typeorm": "^0.3.30",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@types/bcrypt": "^6.0.0",

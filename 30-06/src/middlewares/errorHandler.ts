@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 
 // esse middleware vai formatar cada resposta de erro. ao invés de cada controller ter que pegar um erro e formatar a mensagem, ele faz isso para todos
 export function errorHandler(error: any, req: Request, res: Response) {

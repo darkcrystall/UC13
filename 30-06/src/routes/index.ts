@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { UserController } from "../controllers/UserController";
 import { validateUser } from "../middlewares/validateUser";
-import { validateUserUpdate } from "../middlewares/validateUserUpdate";
+import { validateUserV2 } from "../middlewares/validateUserv2";
 export const router = Router(); // cria o objeto das rotas do express (necessário para criar as rotas)
 const userController = new UserController(); // objeto da classe UserController
 // USER ROUTES
@@ -10,10 +10,10 @@ const userController = new UserController(); // objeto da classe UserController
 router.get("/users", userController.list.bind(userController));
 router.get("/users/:id", userController.getById.bind(userController));
 // validateUser roda primeiro: se os dados estiverem inválidos, a requisição já é interrompida ali, sem nem chegar ao Controller
-router.post("/users", validateUser, userController.create.bind(userController));
+router.post("/users", validateUserV2, userController.create.bind(userController));
 router.put(
   "/users/:id",
-  validateUserUpdate,
+  validateUserV2,
   userController.update.bind(userController)
 );
 router.delete("/users/:id", userController.delete.bind(userController));
