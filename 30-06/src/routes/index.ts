@@ -3,8 +3,10 @@ import { UserController } from "../controllers/UserController";
 import { validateUser } from "../middlewares/validateUser";
 import { validateUserFields } from "../middlewares/validateUserFields";
 import { validateId } from "../middlewares/validateId";
+import { PostController } from "../controllers/PostController";
 export const router = Router(); // cria o objeto das rotas do express (necessário para criar as rotas)
 const userController = new UserController(); // objeto da classe UserController
+const postController = new PostController();
 // USER ROUTES
 // para criar uma rota, usamos o objeto router e passamos como parâmetroso caminho e o objeto do controlador que vai ser executado, e os middlewares, se necessário
 // .bind(userController) garante que o "this" dentro do método continue apontando pra instância certa quando o Express chamar essa função
@@ -32,3 +34,11 @@ router.delete(
   validateId,
   userController.delete.bind(userController)
 );
+// POST ROUTES
+router.get("/posts", postController.listAll.bind(postController));
+router.post("/posts", postController.create.bind(postController));
+router.get(
+  "/posts/:userName",
+  postController.findByUserName.bind(postController)
+);
+router.delete("/posts/:id", validateId, postController.delete.bind(postController));
