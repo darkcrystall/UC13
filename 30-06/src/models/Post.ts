@@ -1,9 +1,4 @@
-import {
-  Column,
-  Entity,
-  ManyToOne,
-  PrimaryGeneratedColumn,
-} from "typeorm";
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { User } from "./User";
 // @Entity('posts') indica que esta classe representa a tabela "posts".
 @Entity("posts")
@@ -17,6 +12,6 @@ export class Post {
   // () => User -> função que retorna a entidade relacionada.
   // user => user.posts -> indica a propriedade em User que referencia os posts.
   // O TypeORM usa isso para criar a chave estrangeira automaticamente.
-  @ManyToOne(() => User, (user) => user.posts)
+  @ManyToOne(() => User, (user) => user.posts, { nullable: false })
   user: User;
 }

@@ -12,6 +12,9 @@ export const PostService = {
     return result;
   },
   async create(data: { title: string; userId: number }) {
+    if (!data.title || !data.userId) {
+      throw new Error("É obrigatório especificar todos os campos");
+    }
     const createdBy = await UserRepository.findById(data.userId);
     if (!createdBy) {
       throw new Error("Usuário inexistente");
@@ -30,7 +33,7 @@ export const PostService = {
     if (data.title) {
       post.title = data.title;
     }
-    return PostRepository.update(id, {title: data.title, user: user});
+    return PostRepository.update(id, { title: data.title, user: user });
   },
   async delete(id: number) {
     const result = await PostRepository.delete(id);
