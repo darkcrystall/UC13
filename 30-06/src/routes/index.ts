@@ -41,4 +41,13 @@ router.get(
   "/posts/:userName",
   postController.findByUserName.bind(postController)
 );
-router.delete("/posts/:id", validateId, postController.delete.bind(postController));
+router.put(
+  "/posts/:id",
+  validateId,
+  postController.update.bind(postController)
+);
+router.delete(
+  "/posts/:id",
+  validateId,
+  postController.delete.bind(postController)
+);

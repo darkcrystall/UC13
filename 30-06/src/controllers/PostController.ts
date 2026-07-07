@@ -34,6 +34,16 @@ export class PostController {
       next(error);
     }
   }
+  async update(req: Request, res: Response, next: NextFunction) {
+    try {
+      const id = Number(req.params.id);
+      const { title, userId } = req.body;
+      await PostService.update(id, { title, userId });
+      return res.status(204).send();
+    } catch (error) {
+      next(error);
+    }
+  }
   async delete(req: Request, res: Response, next: NextFunction) {
     try {
       const id = Number(req.params.id);

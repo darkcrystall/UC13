@@ -18,6 +18,20 @@ export const PostService = {
     }
     return PostRepository.create({ title: data.title, user: createdBy });
   },
+  async update(id: number, data: { title?: string; userId: number }) {
+    const post = await PostRepository.findById(id);
+    if (!post) {
+      throw new Error("Postagem não encontrada");
+    }
+    const user = await UserRepository.findById(data.userId);
+    if (!user) {
+      throw new Error("Usuário não encontrado");
+    }
+    if (data.title) {
+      post.title = data.title;
+    }
+    return PostRepository.update(id, {title: data.title, user: user});
+  },
   async delete(id: number) {
     const result = await PostRepository.delete(id);
     if (result.affected === 0) {
