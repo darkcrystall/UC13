@@ -1,9 +1,12 @@
 import { UserRepository } from "../repositories/UserRepository";
 import bcrypt from "bcrypt";
 import { omitPassword } from "../utils/omitPassword";
+import { email } from "zod";
+import { generateToken } from "../utils/jwt";
 // a camada Service é responsável por chamar os métodos do repository e cuidar das validações das nossas regras de negócio (ex: um usuário precisa de um email válido, etc)
 // aqui estamos criando uma classe de erro que extende a classe Error. Isso é para permitir que, mais tarde, o Controller identifique o tipo de erro de uma forma mais clara
 export class NotFoundError extends Error {}
+export class UnauthorizedError extends Error {} // erro de não autorizado
 export const UserService = {
   // como para listar não precisamos validar nada, aqui só chamamos o método repository, pois o controller não pode se comunicar diretamente com o repository, apenas com a service
   async listAll() {
@@ -34,6 +37,19 @@ export const UserService = {
     });
     // chamamos o método de omitPassword, que retorna sem mostrar a senha
     return omitPassword(user);
+  },
+  // método de login
+  async login(data: { email: string; password: string }) {
+    const user = await UserRepository.findByEmail(data.email);
+    if (!user) {
+      throw new NotFoundError("Usuário não encontrado");
+    }
+    const passwordIsValid = await bcrypt.compare(data.password, user.password);
+    if (!passwordIsValid) {
+      throw new UnauthorizedError("Senha inválida");
+    }
+    const token = generateToken({ id: user.id, email: user.email });
+    return { user: omitPassword(user), token };
   },
   // atualiza um usuário existente
   async update(
