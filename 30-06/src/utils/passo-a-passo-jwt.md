@@ -38,14 +38,14 @@ JWT_EXPIRES_IN=86400 // tempo em segundos que o token expirará
 ```ts
 interface Payload { id: number; email: string }
 ```
-3.5. Criação da função que gera um token
+3.5. Cria-se a função que gera um token
 ```ts
 export function generateToken(payload: Payload) {
     // o método sign() assina um token. precisa de três argumentos, nessa ordem: o Payload, a Signature do sistema e um objeto que contém o atributo expiresIn, que espera um valor dos segundos que o token expirará  
     return jwt.sign(payload, JWT_SECRET!, { expiresIn: Number(JWT_EXPIRES_IN) });
 }
 ```
-3.6. Criação a função que verifica um token
+3.6. Cria-se a função que verifica um token
 ```ts
 export function verifyToken() {
     try {
@@ -55,4 +55,74 @@ export function verifyToken() {
         return null;
     }
 }
+```
+
+4. Cria-se uma função que consegue fazer uma busca única, um exemplo é buscar por e-mail.
+```ts
+async findByEmail(email: string) {
+    return repo.findOne({ where: { email }});
+}
+```
+
+5. No arquivo `UserService.ts` da camada Service:
+   5.1. Adicionar uma extensão da classe `Error`, chamando-a de `UnauthorizedError`
+```ts
+export class UnauthorizedError extends Error {}
+```
+    5.2. Adicionar método de login, que valida o usuário pelo e-mail e senha desse usuário
+```ts
+async login(data: { email: string, password: string }) {
+    const user = await UserRepository.findByEmail(data.email);
+    const isCorrect = await bcrypt.compare(data.password, user.password);
+    if (!isCorrect || !user) {
+        throw new UnauthorizedError("Não autorizado");
+    }
+    const token = generateToken({ id: user.id, email: user.email });
+    return { user: omitPassword(user), token };
+}
+```
+
+6. No arquivo `AuthController.ts` da camada Controller: 
+
+```ts 
+import { Request, Response, NextFunction } from "express";
+import { UserService } from "../services/UserService"
+```
+
+```ts
+export class AuthController {
+    async login(req: Request, res: Response, next: NextFunction) {
+        try {
+            const { email, password } = req.body;
+            const result = await UserService.login({ email, password });
+            return res.status(200).json(result);
+        } catch (error) {
+            next(error);
+        }
+    }
+}
+```
+
+7. Na camada Routes, divide-se as rotas de cada entidade, e separando a de autenticação das demais.
+    7.1. Em `routes`, cria-se o arquivo `auth.routes.ts`, e então importa-se:
+```ts
+import { Router } from "express";
+import { AuthController } from "../controllers/AuthController";
+```
+    7.2. Cria-se o objeto `router` e `authController`:
+```ts
+const router = Router();
+const authController = new AuthController();
+```
+    7.3. Cria-se a rota: 
+```ts
+router.post("/login", authController.login.bind(authController));
+export default router;
+```
+    7.4. No arquivo principal `index.ts` das rotas, importamos:
+```ts
+import authRoutes from "./auth.routes";
+const router = Router();
+router.use("/auth", authRoutes);
+export default router;
 ```
