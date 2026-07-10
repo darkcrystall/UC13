@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from "express";
 import { PostService } from "../services/PostService";
-
 export class PostController {
   async listAll(req: Request, res: Response, next: NextFunction) {
     try {
@@ -22,12 +21,33 @@ export class PostController {
       next(error);
     }
   }
+  async findByPostId(req: Request, res: Response, next: NextFunction) {
+    try {
+      const id = Number(req.params.id);
+      const post = await PostService.findByPostId(id);
+      return res.status(200).json(post);
+    } catch (error) {
+      next(error);
+    }
+  }
+  async listMyPosts(req: Request, res: Response, next: NextFunction) {
+    try {
+      // as informações do usuário que esá logado vem da requisição através do token
+      const loggedUser = (req as any).user;
+      // lista os posts do usuário logado
+      const myPosts = await PostService.listMyPosts(loggedUser.id);
+      return res.status(200).json(myPosts);
+    } catch (error) {
+      next(error);
+    }
+  }
   async create(req: Request, res: Response, next: NextFunction) {
     try {
-      const { title, userId } = req.body;
+      const { title } = req.body;
+      const loggedUser = (req as any).user;
       const post = await PostService.create({
         title,
-        userId,
+        userId: loggedUser.id
       });
       return res.status(201).json(post);
     } catch (error) {

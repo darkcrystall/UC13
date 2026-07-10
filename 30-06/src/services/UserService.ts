@@ -40,7 +40,7 @@ export const UserService = {
   // método de login
   async login(data: { email: string; password: string }) {
     const user = await UserRepository.findByEmail(data.email);
-    if (!user) {
+    if (!user || !data.password) {
       throw new NotFoundError("Usuário não encontrado");
     }
     const passwordIsValid = await bcrypt.compare(data.password, user.password);

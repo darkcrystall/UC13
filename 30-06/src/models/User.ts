@@ -25,7 +25,7 @@ export class User {
   // fizermos um find() normal. Isso é uma proteção extra: mesmo que alguém
   // esqueça de remover a senha manualmente antes de responder ao cliente,
   // o campo já não vem na consulta por padrão. Só vem se pedirmos explicitamente.
-  @Column({ select: false, nullable: false })
+  @Column({ nullable: false })
   password: string;
   // @OneToMany indica que um 'User' pode ter vários 'Post' (1:N).
   // Precisamos passar dois parâmetros:

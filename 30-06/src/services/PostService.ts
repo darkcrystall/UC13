@@ -1,15 +1,28 @@
 import { PostRepository } from "../repositories/PostRepository";
 import { UserRepository } from "../repositories/UserRepository";
+import { omitPassword } from "../utils/omitPassword";
 export const PostService = {
   async listAll() {
-    return PostRepository.findAll();
+    const posts = await PostRepository.findAll();
+    return posts.map((post) => omitPassword(post.user));
   },
   async findByUserName(userName: string) {
-    const result = await PostRepository.findByUserName(userName);
-    if (result.length === 0) {
+    const posts = await PostRepository.findByUserName(userName);
+    if (posts.length === 0) {
       throw new Error("Nenhuma postagem encontrada");
     }
-    return result;
+    return posts.map((post) => omitPassword(post.user));
+  },
+  async findByPostId(id: number) {
+    const post = await PostRepository.findByPostId(id);
+    if (!post) {
+      throw new Error("Não encontrado")
+    }
+    return omitPassword(post.user);
+  },
+  async listMyPosts(userId: number) {
+    const posts = await PostRepository.findByUserId(userId);
+    return posts.map((post) => omitPassword(post.user))
   },
   async create(data: { title: string; userId: number }) {
     if (!data.title || !data.userId) {
@@ -19,10 +32,11 @@ export const PostService = {
     if (!createdBy) {
       throw new Error("Usuário inexistente");
     }
-    return PostRepository.create({ title: data.title, user: createdBy });
+    const post = await PostRepository.create({ title: data.title, user: createdBy });
+    return omitPassword(post.user);
   },
   async update(id: number, data: { title?: string; userId: number }) {
-    const post = await PostRepository.findById(id);
+    const post = await PostRepository.findByPostId(id);
     if (!post) {
       throw new Error("Postagem não encontrada");
     }
@@ -33,7 +47,7 @@ export const PostService = {
     if (data.title) {
       post.title = data.title;
     }
-    return PostRepository.update(id, { title: data.title, user: user });
+    return await PostRepository.update(id, { title: data.title, user: user });
   },
   async delete(id: number) {
     const result = await PostRepository.delete(id);
