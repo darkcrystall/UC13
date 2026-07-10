@@ -4,6 +4,7 @@ import { generateToken } from "../auth/jwt";
 import { NotFoundError } from "../errors/NotFoundError";
 import { UnauthorizedError } from "../errors/UnauthorizedError";
 import { omitPassword } from "../utils/omitPassword";
+import { ConflictError } from "../errors/ConflictError";
 export const UserService = {
   async listAll() {
     return UserRepository.findAll();
@@ -16,6 +17,10 @@ export const UserService = {
     return user;
   },
   async create(data: { name: string; email: string; password: string }) {
+    const alreadyInUse = await UserRepository.findByEmail(data.email);
+    if (alreadyInUse) {
+      throw new ConflictError("e-mail", data.email);
+    }
     const hashedPassword = await bcrypt.hash(data.password, 10);
     const user = await UserRepository.create({
       name: data.name,
