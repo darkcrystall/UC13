@@ -11,14 +11,14 @@ export const UserRepository = {
   async findByEmail(email: string) {
     return repo.findOneBy({ email });
   },
-  async create(data: any) {
+  async create(data: { name: string, email: string, password: string }) {
     const user = repo.create(data);
     return repo.save(user);
   },
   async save(user: User) {
     return repo.save(user);
   },
-  async delete(user: User) {
-    return repo.remove(user);
+  async delete(id: number) {
+    return repo.delete(id);
   },
 };

@@ -1,7 +1,6 @@
 import { UserRepository } from "../repositories/UserRepository";
 import bcrypt from "bcrypt";
 import { omitPassword } from "../utils/omitPassword";
-import { email } from "zod";
 import { generateToken } from "../utils/jwt";
 // a camada Service é responsável por chamar os métodos do repository e cuidar das validações das nossas regras de negócio (ex: um usuário precisa de um email válido, etc)
 // aqui estamos criando uma classe de erro que extende a classe Error. Isso é para permitir que, mais tarde, o Controller identifique o tipo de erro de uma forma mais clara
