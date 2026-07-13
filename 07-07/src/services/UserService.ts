@@ -5,6 +5,7 @@ import { NotFoundError } from "../errors/NotFoundError";
 import { UnauthorizedError } from "../errors/UnauthorizedError";
 import { omitPassword } from "../utils/omitPassword";
 import { ConflictError } from "../errors/ConflictError";
+import { CreateUserDTO } from "../schemas/user.schema";
 export const UserService = {
   async listAll() {
     return UserRepository.findAll();
@@ -16,7 +17,7 @@ export const UserService = {
     }
     return user;
   },
-  async create(data: { name: string; email: string; password: string }) {
+  async create(data: CreateUserDTO) {
     const alreadyInUse = await UserRepository.findByEmail(data.email);
     if (alreadyInUse) {
       throw new ConflictError("e-mail", data.email);

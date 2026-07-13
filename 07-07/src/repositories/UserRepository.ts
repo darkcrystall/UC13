@@ -1,5 +1,6 @@
 import { AppDataSource } from "../config/data-source";
 import { User } from "../models/User";
+import { CreateUserDTO } from "../schemas/user.schema";
 const repo = AppDataSource.getRepository(User);
 export const UserRepository = {
   async findAll() {
@@ -11,7 +12,7 @@ export const UserRepository = {
   async findByEmail(email: string) {
     return repo.findOneBy({ email });
   },
-  async create(data: { name: string, email: string, password: string }) {
+  async create(data: CreateUserDTO) {
     const user = repo.create(data);
     return repo.save(user);
   },
