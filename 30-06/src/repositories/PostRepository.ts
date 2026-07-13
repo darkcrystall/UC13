@@ -7,7 +7,7 @@ export const PostRepository = {
     return repo.find({ relations: ["user"] });
   },
   async findByPostId(id: number) {
-    return repo.findOne({ where: { id } });
+    return repo.findOne({ where: { id }, relations: ["user"] });
   },
   async findByUserName(userName: string) {
     return repo.find({

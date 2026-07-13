@@ -39,7 +39,7 @@ export const UserService = {
   },
   // método de login
   async login(data: { email: string; password: string }) {
-    const user = await UserRepository.findByEmail(data.email);
+    const user = await UserRepository.findByEmailWithPassword(data.email);
     if (!user || !data.password) {
       throw new NotFoundError("Usuário não encontrado");
     }

@@ -4,25 +4,31 @@ import { omitPassword } from "../utils/omitPassword";
 export const PostService = {
   async listAll() {
     const posts = await PostRepository.findAll();
-    return posts.map((post) => omitPassword(post.user));
+    return posts.map((post) => ({
+      ...post,
+      user: omitPassword(post.user),
+    }));
   },
   async findByUserName(userName: string) {
     const posts = await PostRepository.findByUserName(userName);
     if (posts.length === 0) {
       throw new Error("Nenhuma postagem encontrada");
     }
-    return posts.map((post) => omitPassword(post.user));
+    return posts.map((post) => ({
+      ...post,
+      user: omitPassword(post.user),
+    }));
   },
   async findByPostId(id: number) {
     const post = await PostRepository.findByPostId(id);
     if (!post) {
-      throw new Error("Não encontrado")
+      throw new Error("Não encontrado");
     }
-    return omitPassword(post.user);
+    return { ...post, user: omitPassword(post.user)};
   },
   async listMyPosts(userId: number) {
     const posts = await PostRepository.findByUserId(userId);
-    return posts.map((post) => omitPassword(post.user))
+    return posts.map((post) => omitPassword(post.user));
   },
   async create(data: { title: string; userId: number }) {
     if (!data.title || !data.userId) {
@@ -32,8 +38,11 @@ export const PostService = {
     if (!createdBy) {
       throw new Error("Usuário inexistente");
     }
-    const post = await PostRepository.create({ title: data.title, user: createdBy });
-    return omitPassword(post.user);
+    const post = await PostRepository.create({
+      title: data.title,
+      user: createdBy,
+    });
+    return { ...post, user: omitPassword(post.user)};
   },
   async update(id: number, data: { title?: string; userId: number }) {
     const post = await PostRepository.findByPostId(id);
