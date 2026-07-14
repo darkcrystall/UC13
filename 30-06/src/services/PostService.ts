@@ -67,12 +67,14 @@ export const PostService = {
       user: updatedBy,
     });
   },
-  /*
   async delete(id: number, loggedUserId: number) {
-    const result = await PostRepository.delete(id);
-    if (result.affected === 0) {
-      throw new Error("Postagem não encontrada");
+    const post = await PostRepository.findByPostId(id);
+    if (!post) {
+      throw new NotFoundError("Postagem não encontrada")
     }
+    if (post.user.id !== loggedUserId) {
+      throw new ForbiddenError("Não autorizado")
+    }
+    return await PostRepository.delete(post.id);
   },
-  */
 };

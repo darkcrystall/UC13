@@ -67,15 +67,14 @@ export class PostController {
       next(error);
     }
   }
-  /*
   async delete(req: Request, res: Response, next: NextFunction) {
     try {
       const id = Number(req.params.id);
-      await PostService.delete(id);
+      const loggedUser = (req as any).user;
+      await PostService.delete(id, loggedUser.id);
       return res.status(204).send();
     } catch (error) {
       next(error);
     }
   }
-    */
 }

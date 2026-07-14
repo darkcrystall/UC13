@@ -27,12 +27,10 @@ postRoutes.put(
   validateId,
   postController.update.bind(postController)
 );
-/*
 postRoutes.delete(
   "/:id",
   authMiddleware,
   validateId,
   postController.delete.bind(postController)
 );
-*/
 export default postRoutes;
