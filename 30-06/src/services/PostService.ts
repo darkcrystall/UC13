@@ -1,3 +1,4 @@
+import { omit } from "zod/mini";
 import { PostRepository } from "../repositories/PostRepository";
 import { UserRepository } from "../repositories/UserRepository";
 import { omitPassword } from "../utils/omitPassword";
@@ -28,7 +29,7 @@ export const PostService = {
   },
   async listMyPosts(userId: number) {
     const posts = await PostRepository.findByUserId(userId);
-    return posts.map((post) => omitPassword(post.user));
+    return posts.map((post) => ({ ...post, user: omitPassword(post.user)}));
   },
   async create(data: { title: string; userId: number }) {
     if (!data.title || !data.userId) {
