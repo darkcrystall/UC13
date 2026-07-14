@@ -17,20 +17,22 @@ postRoutes.get(
   postController.listMyPosts.bind(postController)
 );
 postRoutes.get(
-    "/:userName",
-    authMiddleware,
-    postController.findByUserName.bind(postController)
-  );
+  "/:userName",
+  authMiddleware,
+  postController.findByUserName.bind(postController)
+);
 postRoutes.put(
   "/:id",
   authMiddleware,
   validateId,
   postController.update.bind(postController)
 );
+/*
 postRoutes.delete(
   "/:id",
   authMiddleware,
   validateId,
   postController.delete.bind(postController)
 );
+*/
 export default postRoutes;
