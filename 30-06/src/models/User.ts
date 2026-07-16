@@ -15,17 +15,17 @@ export class User {
   // @Column define que esta propriedade será uma coluna no banco.
   // length: 100 -> tamanho máximo do campo.
   // nullable: false -> não pode ser nulo.
-  @Column({ length: 150, nullable: false })
+  @Column({ type: "varchar", length: 150, nullable: false })
   name: string;
   // unique: true garante que o valor será único na tabela (não pode repetir).
-  @Column({ length: 100, unique: true, nullable: false })
+  @Column({ type: "varchar", length: 100, unique: true, nullable: false })
   email: string;
   // Guardamos aqui o HASH da senha, nunca a senha em texto puro.
   // select: false faz o TypeORM, por padrão, NUNCA trazer este campo quando
   // fizermos um find() normal. Isso é uma proteção extra: mesmo que alguém
   // esqueça de remover a senha manualmente antes de responder ao cliente,
   // o campo já não vem na consulta por padrão. Só vem se pedirmos explicitamente.
-  @Column({ nullable: false, select: false })
+  @Column({ type: "varchar", length: 255, nullable: false, select: false })
   password: string;
   // @OneToMany indica que um 'User' pode ter vários 'Post' (1:N).
   // Precisamos passar dois parâmetros:
