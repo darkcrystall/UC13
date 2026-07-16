@@ -5,7 +5,11 @@ import { NotFoundError } from "../errors/NotFoundError";
 import { UnauthorizedError } from "../errors/UnauthorizedError";
 import { omitPassword } from "../utils/omitPassword";
 import { ConflictError } from "../errors/ConflictError";
-import { CreateUserDTO } from "../schemas/user.schema";
+import {
+  CreateUserDTO,
+  LoginUserDTO,
+  UpdateUserDTO,
+} from "../schemas/user.schema";
 export const UserService = {
   async listAll() {
     return UserRepository.findAll();
@@ -30,7 +34,7 @@ export const UserService = {
     });
     return omitPassword(user);
   },
-  async login(data: { email: string; password: string }) {
+  async login(data: LoginUserDTO) {
     const user = await UserRepository.findByEmail(data.email);
     if (!user) {
       throw new UnauthorizedError();
@@ -42,10 +46,7 @@ export const UserService = {
     const token = generateToken({ id: user.id, email: user.email });
     return { user: omitPassword(user), token };
   },
-  async update(
-    id: number,
-    data: { name?: string; email?: string; password?: string }
-  ) {
+  async update(id: number, data: UpdateUserDTO) {
     const user = await UserRepository.findById(id);
     if (!user) {
       throw new NotFoundError("usuário");
