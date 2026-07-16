@@ -8,6 +8,8 @@ export class Post {
   // type -> tipo do campo (se é int, varchar, etc)
   @Column({ type: "varchar", length: 200, nullable: false })
   title: string;
+  @Column({ type: "text", nullable: false })
+  description: string;
   // @ManyToOne indica que vários posts podem pertencer a um único usuário (N:1).
   // () => User -> função que retorna a entidade relacionada.
   // user => user.posts -> indica a propriedade em User que referencia os posts.
